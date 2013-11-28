@@ -73,7 +73,8 @@ OscarProducer::OscarProducer(edm::ParameterSet const & p)
     produces<edm::PSimHitContainer>("FP420SI");
     produces<edm::PSimHitContainer>("BSCHits");
     produces<edm::PSimHitContainer>("PLTHits");
-
+    produces<edm::PSimHitContainer>("BCM1FHits");
+   
     produces<edm::PCaloHitContainer>("EcalHitsEB");
     produces<edm::PCaloHitContainer>("EcalHitsEE");
     produces<edm::PCaloHitContainer>("EcalHitsES");
