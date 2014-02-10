@@ -10,14 +10,13 @@
     <!-- Declare constants used in the PLT DDL -->
     <ConstantsSection label="cassette_build.xml" eval="true">
         <Constant name = "pltTilt" value = "1.57*deg" />
-        <Constant name = "PLTBackOff" value = "0.*mm" />
         
         <Constant name = "SiPlane0RtoCenter" value = "48.5*mm" />
         <Constant name = "SiPlane1RtoCenter" value = "49.5*mm" />
         <Constant name = "SiPlane2RtoCenter" value = "50.5*mm" />
         
         <Constant name = "SiPlane0ZtoCenter" value = "1714.1*mm" />
-        <Constant name = "SiPlane1ZtoCenter" value = "1751.8*mm+[PLTBackOff]" />
+        <Constant name = "SiPlane1ZtoCenter" value = "1751.8*mm" />
         <Constant name = "SiPlane2ZtoCenter" value = "1789.5*mm" />
         
         <Constant name = "ROCWidthX" value = "10.0*mm"  />
