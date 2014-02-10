@@ -161,22 +161,29 @@
             <Translation x="-[TelWidthX]/2.+[ROCWidthX]/2.+2.*mm" y="0.*mm" z="[TelWidthZ]/2.-[SiThkZ]/2" />
             <rRotation  name="rotations:000D" />
         </PosPart>
-                
-        <!-- Position the 8 telescopes on each side of the IP -->
+
+        <PosPart copyNumber="1">
+            <rParent name="pltbcm:PLTBCM"/>
+            <rChild name="PLT"/>
+            <Translation x="0.*mm" y="0.*mm" z="[SiPlane1ZtoCenter]-[pltbcm:PltBcmZ]" />
+            <rRotation name="rotations:000D"/>
+        </PosPart>
+
+        <!--      Old positioning without PLTBCM volume
         <PosPart copyNumber="1">
             <rParent name="cms:CMSE"/>
             <rChild name="PLT"/>
             <Translation x="0.*mm" y="0.*mm" z="[SiPlane1ZtoCenter]" />
             <rRotation name="rotations:000D"/>
         </PosPart>
-        <!-- PLT on both sides of the IP -->
+
 	
         <PosPart copyNumber="0">
             <rParent name="cms:CMSE"/>
             <rChild name="PLT"/>
             <Translation x="0.*mm" y="0.*mm" z="-[SiPlane1ZtoCenter]" />
             <rRotation name="rotations:180D"/>
-        </PosPart>
+        </PosPart> -->
         
         <Algorithm name="global:DDAngular">
             <rParent name="PLT"/>

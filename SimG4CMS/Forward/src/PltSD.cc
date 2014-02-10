@@ -125,7 +125,10 @@ uint32_t PltSD::setDetUnitId(G4Step * aStep ) {
         int rowNo = touch->GetReplicaNumber(1);
         int sensorNo = touch->GetReplicaNumber(2);
         int telNo  = touch->GetReplicaNumber(3);
-        int pltNo = touch->GetReplicaNumber(4);
+        int temp = touch->GetReplicaNumber(5);
+        int pltNo;
+        if (temp == 2) pltNo = 0;
+        else pltNo = 1;
         
         //take into account the fact that the telescopes in +-z are 180 degrees out of phase
         int halfCarriageNo = -1;
