@@ -58,27 +58,6 @@
         
     </SolidSection>
     
-    <RotationSection label="cassette_build.xml">
-        <!-- Telescope rotation matrix -->
-        <Rotation name="RotTel1" thetaX="90.*deg" thetaY="90.*deg" thetaZ="0.0*deg"
-        phiX="-90.0*deg" phiY="0.0*deg"  phiZ="0.0*deg" />
-        <Rotation name="RotTel2" thetaX="90.*deg" thetaY="90.*deg" thetaZ="0.0*deg"
-        phiX="-45.0*deg" phiY="45.0*deg"  phiZ="45.0*deg" />
-        <Rotation name="RotTel3" thetaX="90.*deg" thetaY="90.*deg" thetaZ="0.0*deg"
-        phiX="0.0*deg" phiY="90.0*deg"  phiZ="90.0*deg" />
-        <Rotation name="RotTel4" thetaX="90.*deg" thetaY="90.*deg" thetaZ="0.0*deg"
-        phiX="45.0*deg" phiY="135.0*deg"  phiZ="135.0*deg" />
-        <Rotation name="RotTel5" thetaX="90.*deg" thetaY="90.*deg" thetaZ="0.0*deg"
-        phiX="90.0*deg" phiY="180.0*deg"  phiZ="180.0*deg" />
-        <Rotation name="RotTel6" thetaX="90.*deg" thetaY="90.*deg" thetaZ="0.0*deg"
-        phiX="135.0*deg" phiY="225.0*deg"  phiZ="225.0*deg" />
-        <Rotation name="RotTel7" thetaX="90.*deg" thetaY="90.*deg" thetaZ="0.0*deg"
-        phiX="180.0*deg" phiY="270.0*deg"  phiZ="270.0*deg" />
-        <Rotation name="RotTel8" thetaX="90.*deg" thetaY="90.*deg" thetaZ="0.0*deg"
-        phiX="225.0*deg" phiY="315.0*deg"  phiZ="315.0*deg" />
-    </RotationSection>
-    
-    
     <!-- Define the Physical PLT Solids, i.e. the Logical Parts --> 
     <LogicalPartSection label="main.xml">
         <!--Changed all materials to be materials:Vacuum except for silicon -->
