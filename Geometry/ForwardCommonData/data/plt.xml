@@ -4,8 +4,7 @@
     xsi:schemaLocation="http://www.cern.ch/cms/DDL 
     ../../../DetectorDescription/Schema/DDLSchema.xsd">
     
-    <!-- Author: Christian Contreras-Campana -->
-    <!-- Transition to Silicon from Diamond done by Steven M. Kaplan -->
+    <!-- Author: Steven M. Kaplan -->
     
     <!-- Declare constants used in the PLT DDL -->
     <ConstantsSection label="cassette_build.xml" eval="true">
@@ -120,12 +119,12 @@
         <Algorithm name="global:DDLinear">
             <rParent name="PLTSensorRow"/>
             <String name="ChildName" value="PLTPixel"/>
-            <Numeric name="StartCopyNo" value="0"/>
+            <Numeric name="StartCopyNo" value="1"/>
             <Numeric name="IncrCopyNo" value="1"/>
             <Numeric name="N" value="[NumberOfColumns]"/>
             <Numeric name="Delta" value="[PixelColumnWidth]"/>
-            <Vector name="Base" type="numeric" nEntries="3"> -[ActiveAreaColumnWidth]/2.+[PixelColumnWidth]/2.,0.*mm,0.*mm </Vector>
-            <Numeric name="Theta" value="90*deg"/>
+            <Vector name="Base" type="numeric" nEntries="3"> [ActiveAreaColumnWidth]/2.-[PixelColumnWidth]/2.,0.*mm,0.*mm </Vector>
+            <Numeric name="Theta" value="-90*deg"/>
             <Numeric name="Phi" value="0.*deg"/>
         </Algorithm>
         <!-- Copy the rows to form the sensor plane! -->
