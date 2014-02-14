@@ -7,7 +7,7 @@
     <!-- Author: Steven M. Kaplan -->
     
     <!-- Declare constants used in the PLT DDL -->
-    <ConstantsSection label="cassette_build.xml" eval="true">
+    <ConstantsSection label="plt" eval="true">
         <Constant name = "pltTilt" value = "1.57*deg" />
         
         <Constant name = "SiPlane0RtoCenter" value = "48.5*mm" />
@@ -37,7 +37,7 @@
     </ConstantsSection>
     
     <!-- Declare PLT component Solids  -->
-    <SolidSection label="main.xml">
+    <SolidSection label="plt">
         
         <!-- Declare telescope components-->
         <Box  name="PLTSensorPlane"        dx="[ROCWidthX]/2."       dy="[ROCWidthY]/2."       
@@ -59,7 +59,7 @@
     </SolidSection>
     
     <!-- Define the Physical PLT Solids, i.e. the Logical Parts --> 
-    <LogicalPartSection label="main.xml">
+    <LogicalPartSection label="plt">
         <!--Changed all materials to be materials:Vacuum except for silicon -->
         <!-- Telescope logical parts -->
         <LogicalPart name="PLT" category="unspecified">
@@ -90,7 +90,7 @@
     </LogicalPartSection>
     
     <!-- Position the Silicon in the telescope and copy the telescope to have 8 of them.  Take this amalgamation of 8 telescopes then copy it to have one on each end of the IP--> 
-    <PosPartSection label="main.xml">
+    <PosPartSection label="plt">
         
         <!-- Positioning Silicon in the telescope -->
         
