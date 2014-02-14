@@ -103,8 +103,8 @@
             <Numeric name="N" value="[NumberOfColumns]"/>
             <Numeric name="Delta" value="[PixelColumnWidth]"/>
             <Vector name="Base" type="numeric" nEntries="3"> [ActiveAreaColumnWidth]/2.-[PixelColumnWidth]/2.,0.*mm,0.*mm </Vector>
-            <Numeric name="Theta" value="-90*deg"/>
-            <Numeric name="Phi" value="0.*deg"/>
+            <Numeric name="Theta" value="90*deg"/>
+            <Numeric name="Phi" value="180.*deg"/>
         </Algorithm>
         <!-- Copy the rows to form the sensor plane! -->
         <Algorithm name="global:DDLinear">
