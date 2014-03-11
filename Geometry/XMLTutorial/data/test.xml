@@ -11,7 +11,7 @@
         <Constant name = "pltTilt" value = "1.57*deg" />
         
         <Constant name = "SiPlane0RtoCenter" value = "48.5*mm" />
-        <Constant name = "SiPlane1RtoCenter" value = "49.5*mm" />
+        <Constant name = "SiPlane1RtoCenter" value = "260*mm" />
         <Constant name = "SiPlane2RtoCenter" value = "50.5*mm" />
         
         <Constant name = "SiPlane0ZtoCenter" value = "1714.1*mm" />
@@ -103,14 +103,25 @@
             <Numeric name="Phi" value="-90.*deg"/>
         </Algorithm>
 
+        <Algorithm name="global:DDAngular">
+            <rParent name="cms:CMSE"/>
+            <String name="ChildName" value="PLTSensorPlane"/>
+            <Numeric name="StartCopyNo" value="0"/>
+            <Numeric name="IncrCopyNo" value="1"/>
+            <Numeric name="N" value="8"/>
+            <Numeric name="Radius" value="[SiPlane1RtoCenter]"/>
+            <Numeric name="StartAngle" value="0.*deg"/>
+            <Numeric name="RangeAngle" value="360*deg"/>
+            <Vector name="Center" type="numeric" nEntries="3"> 0, 0, 0 </Vector>
+            <Vector name="RotateSolid" type="numeric" nEntries="24"> 0.*deg, 0.*deg, -90.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg, 0.*deg </Vector>
+        </Algorithm>
+
         <PosPart copyNumber="1">
             <rParent name="cms:CMSE"/>
             <rChild name="PLTSensorPlane"/>
-            <Translation x="0.*mm" y="0.*mm" z="[SiPlane1ZtoCenter]" />
+            <Translation x="0.*mm" y="0.*mm" z="0.*mm" />
             <rRotation name="rotations:000D"/>
         </PosPart>
-
-        
         
     </PosPartSection>
     
