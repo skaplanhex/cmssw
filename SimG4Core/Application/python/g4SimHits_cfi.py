@@ -94,7 +94,7 @@ g4SimHits = cms.EDProducer("OscarProducer",
         MonopoleTransport    = cms.untracked.bool(True),
         MonopoleMass         = cms.untracked.double(0),
         Region      = cms.string(' '),
-	TrackingCut = cms.bool(True),
+    TrackingCut = cms.bool(True),
         SRType      = cms.bool(True),
         EMPhysics   = cms.untracked.bool(True),
         HadPhysics  = cms.untracked.bool(True),
@@ -383,6 +383,10 @@ g4SimHits = cms.EDProducer("OscarProducer",
         EnergyThresholdForPersistencyInGeV = cms.double(0.2),
         EnergyThresholdForHistoryInGeV = cms.double(0.05)
     ),
+    Bcm1fSD = cms.PSet(
+        EnergyThresholdForPersistencyInGeV = cms.double(0.010),
+        EnergyThresholdForHistoryInGeV = cms.double(0.005)
+    ),
     HcalTB02SD = cms.PSet(
         UseBirkLaw = cms.untracked.bool(False),
         BirkC1 = cms.untracked.double(0.013),
@@ -402,6 +406,3 @@ g4SimHits = cms.EDProducer("OscarProducer",
         BirkC2 = cms.double(0.0568)
     )
 )
-
-
-
