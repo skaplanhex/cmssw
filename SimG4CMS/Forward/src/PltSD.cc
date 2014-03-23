@@ -129,83 +129,65 @@ uint32_t PltSD::setDetUnitId(G4Step * aStep ) {
         int pltNo;
         if (temp == 2) pltNo = 0;
         else pltNo = 1;
-        
-        //take into account the fact that the telescopes in +-z are 180 degrees out of phase
+
+        //correct the telescope numbers on the -z side to have the same naming convention in phi as the +z side
+        if (pltNo == 0){
+            if (telNo == 0){
+                telNo = 4;
+            }
+            else if (telNo == 1){
+                telNo = 3;
+            }
+            else if (telNo == 3){
+                telNo = 1;
+            }
+            else if (telNo == 4){
+                telNo = 0;
+            }
+            else if (telNo == 5){
+                telNo = 7;
+            }
+            else if (telNo == 7){
+                telNo = 5;
+            }
+        }
+        //correct the telescope naming convention to number by the half-carriage
         int halfCarriageNo = -1;
         int newTelNo = -1;
-        //+z side of IP
-        if (pltNo == 1) {
-            //inner (+x) carriage
-            if (telNo == 6 || telNo == 7 || telNo == 0 || telNo == 1) {
-                halfCarriageNo = 1;
-                if (telNo == 6) {
-                    newTelNo = 0;
-                }
-                else if (telNo == 7) {
-                    newTelNo = 1;
-                }
-                else if (telNo == 0) {
-                    newTelNo = 2;
-                }
-                else if (telNo == 1) {
-                    newTelNo = 3;
-                }
+        //inner (+x) carriage
+        if (telNo == 0 || telNo == 5 || telNo == 6 || telNo == 7) {
+            halfCarriageNo = 1;
+            if (telNo == 0) {
+                newTelNo = 3;
             }
-            //outer (-x) carriage
-            else{
-                halfCarriageNo = 0;
-                if (telNo == 2) {
-                    newTelNo = 0;
-                }
-                else if (telNo == 3) {
-                    newTelNo = 1;
-                }
-                else if (telNo == 4) {
-                    newTelNo = 2;
-                }
-                else if (telNo == 5) {
-                    newTelNo = 3;
-                }
+            else if (telNo == 5) {
+                newTelNo = 0;
+            }
+            else if (telNo == 6) {
+                newTelNo = 1;
+            }
+            else if (telNo == 7) {
+                newTelNo = 2;
             }
         }
-        //-z side of IP
-        else if (pltNo == 0) {
-            //inner carriage
-            if (telNo == 6 || telNo == 5 || telNo == 4 || telNo == 3) {
-                halfCarriageNo = 1;
-                if (telNo == 6) {
-                    newTelNo = 0;
-                }
-                else if (telNo == 5) {
-                    newTelNo = 1;
-                }
-                else if (telNo == 4) {
-                    newTelNo = 2;
-                }
-                else if (telNo == 3) {
-                    newTelNo = 3;
-                }
+        //outer (-x) carriage
+        else{
+            halfCarriageNo = 0;
+            if (telNo == 1) {
+                newTelNo = 0;
             }
-            //outer carriage
-            else{
-                halfCarriageNo = 0;
-                if (telNo == 2) {
-                    newTelNo = 0;
-                }
-                else if (telNo == 1) {
-                    newTelNo = 1;
-                }
-                else if (telNo == 0) {
-                    newTelNo = 2;
-                }
-                else if (telNo == 7) {
-                    newTelNo = 3;
-                }
+            else if (telNo == 2) {
+                newTelNo = 1;
+            }
+            else if (telNo == 3) {
+                newTelNo = 2;
+            }
+            else if (telNo == 4) {
+                newTelNo = 3;
             }
         }
-        
         detId = 10000000*pltNo+1000000*halfCarriageNo+100000*newTelNo+10000*sensorNo+100*rowNo+columnNo;
-        //std::cout << "detID recorded: " << detId << std::endl;
+        std::cout <<  "Hit Recorded at " << "plt:" << pltNo << " hc:" << halfCarriageNo << " tel:" << newTelNo << " plane:" << sensorNo << std::endl;
     }
     
     return detId;

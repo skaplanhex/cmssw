@@ -2,10 +2,8 @@
 <DDDefinition xmlns="http://www.cern.ch/cms/DDL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cern.ch/cms/DDL ../../../DetectorDescription/Schema/DDLSchema.xsd">
  <ConstantsSection label="pltbcm">
  <!-- PLT-BCM volume constants -->
-    <Constant name="PltBcmZ1" value="1.700*m"/>
-    <Constant name="PltBcmZ2" value="1.900*m"/>
-    <Constant name="PltBcmZ"             value="([PltBcmZ2]+[PltBcmZ1])/2"/>
-    <Constant name="PltBcmDZ"            value="([PltBcmZ2]-[PltBcmZ1])/2"/>
+    <Constant name="PltBcmZ"             value="([cms:TrackBcm1Z2]+[cms:TrackLumiZ1])/2"/>
+    <Constant name="PltBcmDZ"            value="([cms:TrackBcm1Z2]-[cms:TrackLumiZ1])/2"/>
     <Constant name="PltBcmInnerRadius"   value="[cms:TrackBeamR1]"/>
     <Constant name="PltBcmOuterRadius"   value="[cms:TrackLumiR1]"/>
  </ConstantsSection>
@@ -27,16 +25,16 @@
  <PosPartSection label="pltbcm">
     <!-- Volumes in -Z and +Z --> 
      <PosPart copyNumber="1">
-       <rParent name="pixfwd:PixelForwardZPlus"/>
+       <rParent name="cms:CMSE"/>
        <rChild name="PLTBCM"/>
        <rRotation name="rotations:000D"/>
-       <Translation x="0*fm" y="0*fm" z="[PltBcmZ]-([pixfwd:ZPixelForward]+[pixfwd:RootStartZ])"/>
+       <Translation x="0*fm" y="0*fm" z="[PltBcmZ]"/>
     </PosPart>
      <PosPart copyNumber="2">
-       <rParent name="pixfwd:PixelForwardZMinus"/>
+       <rParent name="cms:CMSE"/>
        <rChild name="PLTBCM"/>
-       <rRotation name="rotations:000D"/>
-       <Translation x="0*fm" y="0*fm" z="[PltBcmZ]-([pixfwd:ZPixelForward]+[pixfwd:RootStartZ])"/>
+       <rRotation name="rotations:180D"/>
+       <Translation x="0*fm" y="0*fm" z="-[PltBcmZ]"/>
     </PosPart>
  </PosPartSection>
 </DDDefinition>
