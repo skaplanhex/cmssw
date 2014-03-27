@@ -129,10 +129,11 @@
             <rRotation  name="rotations:000D" />
         </PosPart>
         <!-- Copy the PLT into the PLTBCM volume -->
+        <!-- NOTE: The 2mm shift is due to the new tracker volume to make the plt planes positioned in |z| correctly.-->
         <PosPart copyNumber="1">
             <rParent name="pltbcm:PLTBCM"/>
             <rChild name="PLT"/>
-            <Translation x="0.*mm" y="0.*mm" z="[SiPlane1ZtoCenter]-[pltbcm:PltBcmZ]" />
+            <Translation x="0.*mm" y="0.*mm" z="[SiPlane1ZtoCenter]-[pltbcm:PltBcmZ]-2.*mm" />
             <rRotation name="rotations:000D"/>
         </PosPart>
 
