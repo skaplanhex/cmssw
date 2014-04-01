@@ -17,20 +17,49 @@ process.maxEvents = cms.untracked.PSet(
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
         # /TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM
-        '/store/mc/Summer12_DR53X/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/AODSIM/PU_S10_START53_V7C-v1/00000/008BD264-1526-E211-897A-00266CFFA7BC.root'
+        "/store/mc/Summer12_DR53X/TTJets_SemiLeptMGDecays_8TeV-madgraph/AODSIM/PU_S10_START53_V7A_ext-v1/00000/00A87D82-1324-E211-A592-003048D47A7E.root"
     )
 )
 
-process.printList = cms.EDAnalyzer("ParticleListDrawer",
-    src = cms.InputTag("genParticles"),
-    maxEventsToPrint = cms.untracked.int32(1)
-)
 #-------------------------------------------------------------------------
 # AK5 jets
 #-------------------------------------------------------------------------
 from PhysicsTools.JetMCAlgos.HadronAndPartonSelector_cfi import selectedHadronsAndPartons
 process.selectedHadronsAndPartons = selectedHadronsAndPartons.clone()
 
+process.prunedGenParticlesForJetFlavor = cms.EDProducer('GenParticlePruner',
+    src = cms.InputTag("genParticles"),
+    select = cms.vstring(
+    "drop  *  ", #by default
+    "keep (abs(pdgId) = 1 || abs(pdgId) = 2 || abs(pdgId) = 3 || abs(pdgId) = 4 || abs(pdgId) = 5 || pdgId = 21) & (status = 2 || status = 11 || status = 71)",
+    "keep (abs(pdgId) = 11 || abs(pdgId)= 13) & status = 1",
+    "keep abs(pdgId)= 15 & status = 2",
+    # "keep (abs(pdgId)/100)%10 = 5 || (abs(pdgId)/1000)%10 = 5",
+    # "keep (abs(pdgId)/100)%10 = 4 || (abs(pdgId)/1000)%10 = 4" 
+      # "keep abs(pdgId) = 1 & status = 2",
+      # "keep abs(pdgId) = 2 & status = 2",
+      # "keep abs(pdgId) = 3 & status = 2",
+      # "keep abs(pdgId) = 4 & status = 2",
+      # "keep abs(pdgId) = 5 & status = 2",
+      # "keep pdgId = 21 & status = 2",
+      # "keep abs(pdgId) = 1 & status = 71",
+      # "keep abs(pdgId) = 2 & status = 71",
+      # "keep abs(pdgId) = 3 & status = 71",
+      # "keep abs(pdgId) = 4 & status = 71",
+      # "keep abs(pdgId) = 5 & status = 71",
+      # "keep pdgId = 21 & status = 71",
+      # "keep abs(pdgId) = 1 & status = 11",
+      # "keep abs(pdgId) = 2 & status = 11",
+      # "keep abs(pdgId) = 3 & status = 11",
+      # "keep abs(pdgId) = 4 & status = 11",
+      # "keep abs(pdgId) = 5 & status = 11",
+      # "keep pdgId = 21 & status = 11"
+      )
+)
+process.printList = cms.EDAnalyzer("ParticleListDrawer",
+    src = cms.InputTag("prunedGenParticlesForJetFlavor"),
+    maxEventsToPrint = cms.untracked.int32(1)
+)
 from PhysicsTools.JetMCAlgos.AK5PFJetsMCFlavourInfos_cfi import ak5JetFlavourInfos
 process.jetFlavourInfosAK5PFJets = ak5JetFlavourInfos.clone()
 
@@ -124,11 +153,11 @@ process.printEventCA15PFJets = cms.EDAnalyzer("printJetFlavourInfo",
 #-------------------------------------------------------------------------
 
 process.p = cms.Path(
-    process.printList
-    *process.selectedHadronsAndPartons
-    *process.jetFlavourInfosAK5PFJets*process.printEventAK5PFJets
-    *(process.ak8PFJets+process.ak8PFJetsPruned)*process.jetFlavourInfosAK8PFJets*process.printEventAK8PFJets
-    *(process.ca15PFJets+process.caHEPTopTagJets)*process.jetFlavourInfosCA15PFJets*process.printEventCA15PFJets
+    process.prunedGenParticlesForJetFlavor*process.printList
+    # *process.selectedHadronsAndPartons
+    # *process.jetFlavourInfosAK5PFJets*process.printEventAK5PFJets
+    # *(process.ak8PFJets+process.ak8PFJetsPruned)*process.jetFlavourInfosAK8PFJets*process.printEventAK8PFJets
+    # *(process.ca15PFJets+process.caHEPTopTagJets)*process.jetFlavourInfosCA15PFJets*process.printEventCA15PFJets
 )
 
 process.MessageLogger.destinations = cms.untracked.vstring('cout','cerr')
