@@ -152,7 +152,7 @@
             <Translation x="0.*mm" y="0.*mm" z="-[SiPlane1ZtoCenter]" />
             <rRotation name="rotations:180D"/>
         </PosPart> -->
-        <!-- Copy the telescopes into the PLT volume starting with phi=90 degrees.  RotateSolid vector gives correct orientation of the planes-->
+        <!-- Copy the telescopes into the PLT volume starting with phi=112.5 degrees.  RotateSolid vector gives correct orientation of the planes-->
         <Algorithm name="global:DDAngular">
             <rParent name="PLT"/>
             <String name="ChildName" value="Telescope"/>

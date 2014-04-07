@@ -1,0 +1,7 @@
+<lcgdict>
+ <class name="PLTDigi" ClassVersion="10">
+  <version ClassVersion="10" checksum="293523616"/>
+ </class>
+ <class name="std::vector<PLTDigi>"/>
+ <class name="edm::Wrapper<std::vector<PLTDigi> >"/>
+</lcgdict>

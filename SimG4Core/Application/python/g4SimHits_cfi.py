@@ -380,8 +380,8 @@ g4SimHits = cms.EDProducer("OscarProducer",
         Verbosity = cms.untracked.int32(0)
     ),
     PltSD = cms.PSet(
-        EnergyThresholdForPersistencyInGeV = cms.double(0.2),
-        EnergyThresholdForHistoryInGeV = cms.double(0.05)
+        EnergyThresholdForPersistencyInGeV = cms.double(0.010),
+        EnergyThresholdForHistoryInGeV = cms.double(0.005)
     ),
     Bcm1fSD = cms.PSet(
         EnergyThresholdForPersistencyInGeV = cms.double(0.010),

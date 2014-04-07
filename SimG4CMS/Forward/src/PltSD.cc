@@ -24,6 +24,9 @@
 #include "G4Event.hh"
 #include "G4VProcess.hh"
 
+#include "CLHEP/Units/GlobalSystemOfUnits.h"
+#include "CLHEP/Units/GlobalPhysicalConstants.h"
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -121,73 +124,71 @@ uint32_t PltSD::setDetUnitId(G4Step * aStep ) {
         if ( volumeName != "PLT" )
         std::cout << " PltSD::setDetUnitId -w- Volume name not PLT " << std::endl;
         
-        int columnNo = touch->GetReplicaNumber(0);
-        int rowNo = touch->GetReplicaNumber(1);
-        int sensorNo = touch->GetReplicaNumber(2);
-        int telNo  = touch->GetReplicaNumber(3);
+        //Get the information about which telescope, plane, row/column was hit
+        int columnNum = touch->GetReplicaNumber(0);
+        int rowNum = touch->GetReplicaNumber(1);
+        int sensorNum = touch->GetReplicaNumber(2);
+        int telNum  = touch->GetReplicaNumber(3);
+        //temp stores the PLTBCM volume the hit occured in (i.e. was the hit on the + or -z side?)
         int temp = touch->GetReplicaNumber(5);
-        int pltNo;
-        if (temp == 2) pltNo = 0;
-        else pltNo = 1;
+        //convert to the PLT hit id standard
+        int pltNum;
+        if (temp == 2) pltNum = 0;
+        else pltNum = 1;
 
         //correct the telescope numbers on the -z side to have the same naming convention in phi as the +z side
-        if (pltNo == 0){
-            if (telNo == 0){
-                telNo = 4;
+        if (pltNum == 0){
+            if (telNum == 0){
+                telNum = 7;
             }
-            else if (telNo == 1){
-                telNo = 3;
+            else if (telNum == 1){
+                telNum = 6;
             }
-            else if (telNo == 3){
-                telNo = 1;
+            else if (telNum == 2){
+                telNum = 5;
             }
-            else if (telNo == 4){
-                telNo = 0;
+            else if (telNum == 3){
+                telNum = 4;
             }
-            else if (telNo == 5){
-                telNo = 7;
+            else if (telNum == 4){
+                telNum = 3;
             }
-            else if (telNo == 7){
-                telNo = 5;
+            else if (telNum == 5){
+                telNum = 2;
             }
-        }
-        //correct the telescope naming convention to number by the half-carriage
-        int halfCarriageNo = -1;
-        int newTelNo = -1;
-        //inner (+x) carriage
-        if (telNo == 0 || telNo == 5 || telNo == 6 || telNo == 7) {
-            halfCarriageNo = 1;
-            if (telNo == 0) {
-                newTelNo = 3;
+            else if (telNum == 6){
+                telNum = 1;
             }
-            else if (telNo == 5) {
-                newTelNo = 0;
-            }
-            else if (telNo == 6) {
-                newTelNo = 1;
-            }
-            else if (telNo == 7) {
-                newTelNo = 2;
+            else if (telNum == 7){
+                telNum = 0;
             }
         }
-        //outer (-x) carriage
-        else{
-            halfCarriageNo = 0;
-            if (telNo == 1) {
-                newTelNo = 0;
+        //the PLT is divided into sets of telescopes on the + and -x sides
+        int halfCarriageNum = -1;
+
+        //If the telescope is on the -x side of the carriage, halfCarriageNum=0.  If on the +x side, it is = 1.
+        if(telNum == 0 || telNum == 1 || telNum == 2 || telNum == 3)
+            halfCarriageNum = 0;
+        else
+            halfCarriageNum = 1;
+        //correct the telescope numbers of the +x half-carriage to range from 0 to 3
+        if(halfCarriageNum == 1){
+            if(telNum == 4){
+                telNum = 0;
             }
-            else if (telNo == 2) {
-                newTelNo = 1;
+            else if (telNum == 5){
+                telNum = 1;
             }
-            else if (telNo == 3) {
-                newTelNo = 2;
+            else if (telNum == 6){
+                telNum = 2;
             }
-            else if (telNo == 4) {
-                newTelNo = 3;
+            else if (telNum == 7){
+                telNum = 3;
             }
         }
-        detId = 10000000*pltNo+1000000*halfCarriageNo+100000*newTelNo+10000*sensorNo+100*rowNo+columnNo;
-        std::cout <<  "Hit Recorded at " << "plt:" << pltNo << " hc:" << halfCarriageNo << " tel:" << newTelNo << " plane:" << sensorNo << std::endl;
+        //Define unique detId for each pixel.  See https://twiki.cern.ch/twiki/bin/viewauth/CMS/PLTSimulationGuide for more information
+        detId = 10000000*pltNum+1000000*halfCarriageNum+100000*telNum+10000*sensorNum+100*rowNum+columnNum;
+        //std::cout <<  "Hit Recorded at " << "plt:" << pltNum << " hc:" << halfCarriageNum << " tel:" << telNum << " plane:" << sensorNum << std::endl;
     }
     
     return detId;
