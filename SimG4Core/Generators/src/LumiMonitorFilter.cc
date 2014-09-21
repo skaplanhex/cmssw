@@ -18,7 +18,18 @@ void LumiMonitorFilter::Describe() const
     << " is active ";
 }
 
-bool LumiMonitorFilter::isGoodForLumiMonitor(const HepMC::GenParticle*) const
+bool LumiMonitorFilter::isGoodForLumiMonitor(const HepMC::GenParticle* particle) const
 {
-  return true;
+    using namespace HepMC;
+    using namespace std;
+
+    FourVector p = particle->momentum();
+    double eta = p.eta();
+    if ( eta > 4.14 && eta < 4.35 ){
+        // cout << "Particle passed with eta = " << eta << "!" << endl;
+        return true;
+    }
+    else
+        // cout << "Particle didn't pass the cut!" << endl;
+        return false;
 }
