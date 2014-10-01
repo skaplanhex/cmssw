@@ -237,7 +237,9 @@ XMLIdealGeometryESSource = cms.ESSource("XMLIdealGeometryESSource",
         'Geometry/ForwardCommonData/data/lumirotations.xml',
         'Geometry/ForwardCommonData/data/zdc.xml',
         'Geometry/ForwardCommonData/data/zdclumi.xml',
-        'Geometry/ForwardCommonData/data/cmszdc.xml')+cms.vstring(
+        'Geometry/ForwardCommonData/data/cmszdc.xml',
+        'Geometry/ForwardCommonData/data/plt.xml',
+        'Geometry/ForwardCommonData/data/pltbcm.xml')+cms.vstring(
         'Geometry/ForwardCommonData/data/bhm.xml',
         ##'Geometry/ForwardCommonData/data/bhmsens.xml', #not needed for geomtery purposes only
         'Geometry/MuonCommonData/data/muonNumbering.xml',
@@ -265,6 +267,7 @@ XMLIdealGeometryESSource = cms.ESSource("XMLIdealGeometryESSource",
         'Geometry/TrackerSimData/data/trackerProdCutsBEAM.xml',
         'Geometry/MuonSimData/data/muonProdCuts.xml',
         'Geometry/ForwardSimData/data/CastorProdCuts.xml',
+        'Geometry/ForwardSimData/data/pltsens.xml',
         'Geometry/ForwardSimData/data/zdcProdCuts.xml',
         'Geometry/ForwardSimData/data/ForwardShieldProdCuts.xml',
         'Geometry/CMSCommonData/data/FieldParameters.xml'),
