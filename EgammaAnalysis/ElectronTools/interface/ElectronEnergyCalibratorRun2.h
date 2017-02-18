@@ -3,7 +3,6 @@
 
 #include <TRandom.h>
 #include "EgammaAnalysis/ElectronTools/interface/EnergyScaleCorrection_class.h"
-#include "EgammaAnalysis/ElectronTools/interface/SimpleElectron.h"
 #include "EgammaAnalysis/ElectronTools/interface/EpCombinationToolSemi.h"
 #include "FWCore/Utilities/interface/StreamID.h"
 
