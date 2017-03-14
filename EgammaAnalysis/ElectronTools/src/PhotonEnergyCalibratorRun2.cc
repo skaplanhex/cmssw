@@ -41,10 +41,10 @@ std::vector<float> PhotonEnergyCalibratorRun2::calibrate(reco::Photon &photon, u
 
   DetId seedDetId = photon.superCluster()->seed()->seed();
   EcalRecHitCollection::const_iterator seedRecHit = recHits->find(seedDetId);
-  unsigned int gainSeedSC = 0;
+  unsigned int gainSeedSC = 12;
   if (seedRecHit != recHits->end()) {
-    if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) gainSeedSC |= 0x01;
-    if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) gainSeedSC |= 0x02;
+    if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) gainSeedSC = 6;
+    if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) gainSeedSC = 1;
   }
   scale = correctionRetriever_.ScaleCorrection(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC);
   smear = correctionRetriever_.getSmearingSigma(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC, 0., 0.);
