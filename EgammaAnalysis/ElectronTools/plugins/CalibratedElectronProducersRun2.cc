@@ -51,7 +51,7 @@ CalibratedElectronProducerRun2T<T>::CalibratedElectronProducerRun2T( const edm::
   theEnCorrectorRun2(theEpCombinationTool, conf.getParameter<bool>("isMC"), conf.getParameter<bool>("isSynchronization"), conf.getParameter<std::string>("correctionFile")),
   recHitCollectionEBToken_(consumes<EcalRecHitCollection>(conf.getParameter<edm::InputTag>("recHitCollectionEB"))),
   recHitCollectionEEToken_(consumes<EcalRecHitCollection>(conf.getParameter<edm::InputTag>("recHitCollectionEE"))),
-  autoDataType(conf.getParameter<bool>("autoDataType"))
+  autoDataType((conf.existsAs<bool>("autoDataType") && !conf.getParameter<bool>("autoDataType") ) ? 0 : 1)
 {
   produces<std::vector<T> >();
   produces<floatMap>("EGMscaleStatUpUncertainty");
