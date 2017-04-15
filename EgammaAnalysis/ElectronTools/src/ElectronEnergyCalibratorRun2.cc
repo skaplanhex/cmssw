@@ -51,7 +51,13 @@ std::vector<float> ElectronEnergyCalibratorRun2::calibrate(reco::GsfElectron &el
   }
   scale = correctionRetriever_.ScaleCorrection(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC);  
   smear = correctionRetriever_.getSmearingSigma(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC, 0., 0.);
-  
+
+  // This always to be carefully thought
+  float scale_up = scale + correctionRetriever_.ScaleCorrectionUncertainty(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC, 7);
+  float scale_dn = scale - correctionRetriever_.ScaleCorrectionUncertainty(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC, 7);
+  float resol_up  = correctionRetriever_.getSmearingSigma(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC, 1., 0.);
+  float resol_dn  = correctionRetriever_.getSmearingSigma(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC, -1., 0.);
+
   float scale_stat_up = scale + correctionRetriever_.ScaleCorrectionUncertainty(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC, 1);
   float scale_stat_dn = scale - correctionRetriever_.ScaleCorrectionUncertainty(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC, 1);
   float scale_syst_up = scale + correctionRetriever_.ScaleCorrectionUncertainty(runNumber, electron.isEB(), electron.full5x5_r9(), aeta, et, gainSeedSC, 2);
@@ -76,9 +82,13 @@ std::vector<float> ElectronEnergyCalibratorRun2::calibrate(reco::GsfElectron &el
     double corr_phi_up = 1.0 + resol_phi_up * rndm;
     double corr_phi_dn = 1.0 + resol_phi_dn * rndm;
 
+    double corr_up = 1.0 + resol_phi_up * rndm;
+    double corr_dn = 1.0 + resol_phi_dn * rndm;
+
     electron.setCorrectedEcalEnergy(newEcalEnergy * corr);
     electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * corr, smear * newEcalEnergy * corr));
     combinedMomentum = epCombinationTool_->combine(electron);
+
     uncertainties.push_back(combinedMomentum.first);
     uncertainties.push_back(combinedMomentum.first);
     uncertainties.push_back(combinedMomentum.first);
@@ -103,6 +113,20 @@ std::vector<float> ElectronEnergyCalibratorRun2::calibrate(reco::GsfElectron &el
     
     electron.setCorrectedEcalEnergy(newEcalEnergy * corr_phi_dn);
     electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * corr_phi_dn, resol_phi_dn * newEcalEnergy * corr_phi_dn));
+    combinedMomentum = epCombinationTool_->combine(electron);
+    uncertainties.push_back(combinedMomentum.first);
+
+    // The total variation
+    uncertainties.push_back(combinedMomentum.first);
+    uncertainties.push_back(combinedMomentum.first);
+
+    electron.setCorrectedEcalEnergy(newEcalEnergy * corr_up);
+    electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * corr_up, resol_up * newEcalEnergy * corr_up));
+    combinedMomentum = epCombinationTool_->combine(electron);
+    uncertainties.push_back(combinedMomentum.first);
+    
+    electron.setCorrectedEcalEnergy(newEcalEnergy * corr_dn);
+    electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * corr_dn, resol_dn * newEcalEnergy * corr_dn));
     combinedMomentum = epCombinationTool_->combine(electron);
     uncertainties.push_back(combinedMomentum.first);
     
@@ -161,6 +185,27 @@ std::vector<float> ElectronEnergyCalibratorRun2::calibrate(reco::GsfElectron &el
 
     electron.setCorrectedEcalEnergy(newEcalEnergy * scale);
     electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * scale, resol_phi_dn * newEcalEnergy * scale));
+    combinedMomentum = epCombinationTool_->combine(electron);
+    uncertainties.push_back(combinedMomentum.first);
+
+    // The total variation
+    electron.setCorrectedEcalEnergy(newEcalEnergy * scale_up);
+    electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * scale_up, smear * newEcalEnergy * scale_up));
+    combinedMomentum = epCombinationTool_->combine(electron);
+    uncertainties.push_back(combinedMomentum.first);
+
+    electron.setCorrectedEcalEnergy(newEcalEnergy * scale_dn);
+    electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * scale_dn, smear * newEcalEnergy * scale_dn));
+    combinedMomentum = epCombinationTool_->combine(electron);
+    uncertainties.push_back(combinedMomentum.first);
+
+    electron.setCorrectedEcalEnergy(newEcalEnergy * scale);
+    electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * scale, resol_up * newEcalEnergy * scale));
+    combinedMomentum = epCombinationTool_->combine(electron);
+    uncertainties.push_back(combinedMomentum.first);
+
+    electron.setCorrectedEcalEnergy(newEcalEnergy * scale);
+    electron.setCorrectedEcalEnergyError(std::hypot(newEcalEnergyError * scale, resol_dn * newEcalEnergy * scale));
     combinedMomentum = epCombinationTool_->combine(electron);
     uncertainties.push_back(combinedMomentum.first);
 

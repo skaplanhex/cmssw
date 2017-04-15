@@ -2,4 +2,5 @@
   <class name="ElectronEnergyCalibratorRun2" transient="true" />
   <class name="PhotonEnergyCalibratorRun2" transient="true" />
   <class name="EpCombinationToolSemi" transient="true" />
+  <class name="ElectronEnergyShifter" />
 </lcgdict>
