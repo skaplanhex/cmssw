@@ -46,13 +46,20 @@ getSimpleShiftedObject(edm::RefToBase<reco::GsfElectron>, EGMSmearer::Simplified
 
 The first method shifts the electron with each source of systematic uncertainties:
 
-Uncertainty | EGMSmearer::UncertaintyType | Applied on
+Uncertainty | EGMSmearer::UncertaintyType | To be applied on
 ------------|-----------------------------|------------
 Scale statistics | `EGMSmearer::ScaleStatUp`, `EGMSmearer::ScaleStatDown` | data
 Scale systematics | `EGMSmearer::ScaleSystUp`, `EGMSmearer::ScaleSystDown` | data
 Scale gain | `EGMSmearer::ScaleGainUp`, `EGMSmearer::ScaleGainDown` | data
 Resolution rho | `EGMSmearer::ResolutionRhoUp`, `EGMSmearer::ResolutionRhoDown` | MC
 Resolution phi | `EGMSmearer::ResolutionPhiUp`, `EGMSmearer::ResolutionPhiDown` | MC
+
+The second method has a simplified version of the systematic uncertainties
+
+Uncertainty | EGMSmearer::UncertaintyType | To be applied on
+------------|-----------------------------|------------
+Scale | `EGMSmearer::ScaleUp`, `EGMSmearer::ScaleDown` | data
+Resolution | `EGMSmearer::ResolutionUp`, `EGMSmearer::ResolutionDown` | MC
 
 The example can be run with `UncertaintyCMSSW.py`. There is also an example on how to access systematics in FWLite in `UncertaintyFWLite.py`
 
