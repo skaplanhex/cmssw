@@ -48,6 +48,12 @@ std::vector<float> PhotonEnergyCalibratorRun2::calibrate(reco::Photon &photon, u
   }
   scale = correctionRetriever_.ScaleCorrection(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC);
   smear = correctionRetriever_.getSmearingSigma(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC, 0., 0.);
+
+  // This always to be carefully thought
+  float scale_up = scale + correctionRetriever_.ScaleCorrectionUncertainty(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC, 7);
+  float scale_dn = scale - correctionRetriever_.ScaleCorrectionUncertainty(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC, 7);
+  float resol_up  = correctionRetriever_.getSmearingSigma(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC, 1., 0.);
+  float resol_dn  = correctionRetriever_.getSmearingSigma(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC, -1., 0.);
   
   float scale_stat_up = scale + correctionRetriever_.ScaleCorrectionUncertainty(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC, 1);
   float scale_stat_dn = scale - correctionRetriever_.ScaleCorrectionUncertainty(runNumber, photon.isEB(), photon.full5x5_r9(), aeta, et, gainSeedSC, 1);
@@ -72,6 +78,9 @@ std::vector<float> PhotonEnergyCalibratorRun2::calibrate(reco::Photon &photon, u
     double corr_phi_up = 1.0 + resol_phi_up * rndm;
     double corr_phi_dn = 1.0 + resol_phi_dn * rndm;
 
+    double corr_up = 1.0 + resol_up * rndm;
+    double corr_dn = 1.0 + resol_dn * rndm;
+
     newEcalEnergy      = newEcalEnergy * corr;
     newEcalEnergyError = std::hypot(newEcalEnergyError * corr, smear * newEcalEnergy);
 
@@ -85,6 +94,12 @@ std::vector<float> PhotonEnergyCalibratorRun2::calibrate(reco::Photon &photon, u
     uncertainties.push_back(newEcalEnergy * corr_rho_dn/corr);
     uncertainties.push_back(newEcalEnergy * corr_phi_up/corr);
     uncertainties.push_back(newEcalEnergy * corr_phi_dn/corr);
+    
+    // The total variation
+    uncertainties.push_back(newEcalEnergy);
+    uncertainties.push_back(newEcalEnergy);
+    uncertainties.push_back(newEcalEnergy * corr_up/corr);
+    uncertainties.push_back(newEcalEnergy * corr_dn/corr);
 
   } else if ((eventIsMC < 0 && !isMC_) || (eventIsMC == 0)) {
 
@@ -99,6 +114,12 @@ std::vector<float> PhotonEnergyCalibratorRun2::calibrate(reco::Photon &photon, u
     uncertainties.push_back(newEcalEnergy * scale_gain_dn/scale);
     uncertainties.push_back(newEcalEnergy);
     uncertainties.push_back(newEcalEnergy);
+    uncertainties.push_back(newEcalEnergy);
+    uncertainties.push_back(newEcalEnergy);
+
+    // The total variation
+    uncertainties.push_back(newEcalEnergy * scale_up/scale);
+    uncertainties.push_back(newEcalEnergy * scale_dn/scale);
     uncertainties.push_back(newEcalEnergy);
     uncertainties.push_back(newEcalEnergy);
 

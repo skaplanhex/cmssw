@@ -10,6 +10,7 @@
 #include "FWCore/Utilities/interface/EDGetToken.h"
 
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/Common/interface/ValueMap.h"
 
@@ -40,12 +41,15 @@ private:
   edm::EDGetTokenT<EcalRecHitCollection> recHitCollectionEEToken_;
   bool autoDataType;
 
-  typedef edm::ValueMap<float>        floatMap;
+  typedef edm::ValueMap<float>                     floatMap;
+  typedef edm::View<T>                             objectCollection;
+  typedef std::vector<T>                           objectVector;
+
 };
 
 template<typename T>
 CalibratedElectronProducerRun2T<T>::CalibratedElectronProducerRun2T( const edm::ParameterSet & conf ) :
-  theElectronToken(consumes<edm::View<T> >(conf.getParameter<edm::InputTag>("electrons"))),
+  theElectronToken(consumes<objectCollection>(conf.getParameter<edm::InputTag>("electrons"))),
   theGBRForestName(conf.getParameter< std::vector<std::string> >("gbrForestName")),
   theEpCombinationTool(),
   theEnCorrectorRun2(theEpCombinationTool, conf.getParameter<bool>("isMC"), conf.getParameter<bool>("isSynchronization"), conf.getParameter<std::string>("correctionFile")),
@@ -53,7 +57,7 @@ CalibratedElectronProducerRun2T<T>::CalibratedElectronProducerRun2T( const edm::
   recHitCollectionEEToken_(consumes<EcalRecHitCollection>(conf.getParameter<edm::InputTag>("recHitCollectionEE"))),
   autoDataType((conf.existsAs<bool>("autoDataType") && !conf.getParameter<bool>("autoDataType") ) ? 0 : 1)
 {
-  produces<std::vector<T> >();
+  produces<objectVector>();
   produces<floatMap>("EGMscaleStatUpUncertainty");
   produces<floatMap>("EGMscaleStatDownUncertainty");
   produces<floatMap>("EGMscaleSystUpUncertainty");
@@ -64,6 +68,12 @@ CalibratedElectronProducerRun2T<T>::CalibratedElectronProducerRun2T( const edm::
   produces<floatMap>("EGMresolutionRhoDownUncertainty");
   produces<floatMap>("EGMresolutionPhiUpUncertainty");
   produces<floatMap>("EGMresolutionPhiDownUncertainty");
+
+  produces<floatMap>("EGMscaleUpUncertainty");
+  produces<floatMap>("EGMscaleDownUncertainty");
+  produces<floatMap>("EGMresolutionUpUncertainty");
+  produces<floatMap>("EGMresolutionDownUncertainty");
+
 }
 
 template<typename T>
@@ -79,12 +89,12 @@ CalibratedElectronProducerRun2T<T>::produce( edm::Event & iEvent, const edm::Eve
   for (auto&& forestName : theGBRForestName) {
     edm::ESHandle<GBRForestD> forestHandle;
     iSetup.get<GBRDWrapperRcd>().get(forestName, forestHandle);
-    theGBRForestHandle.emplace_back(forestHandle.product());      
+    theGBRForestHandle.push_back(forestHandle.product());      
   }
   
   theEpCombinationTool.init(theGBRForestHandle);
   
-  edm::Handle<edm::View<T> > in;
+  edm::Handle<objectCollection> in;
   iEvent.getByToken(theElectronToken, in);
   
   edm::Handle<EcalRecHitCollection> recHitCollectionEBHandle;
@@ -93,7 +103,8 @@ CalibratedElectronProducerRun2T<T>::produce( edm::Event & iEvent, const edm::Eve
   iEvent.getByToken(recHitCollectionEBToken_, recHitCollectionEBHandle);
   iEvent.getByToken(recHitCollectionEEToken_, recHitCollectionEEHandle);
   
-  std::unique_ptr<std::vector<T> > out = std::make_unique<std::vector<T> >();
+  std::unique_ptr<objectVector> out = std::make_unique<objectVector>();
+  
   std::vector<float> stat_up;
   std::vector<float> stat_dn;
   std::vector<float> syst_up;
@@ -105,7 +116,13 @@ CalibratedElectronProducerRun2T<T>::produce( edm::Event & iEvent, const edm::Eve
   std::vector<float> phi_up;
   std::vector<float> phi_dn;
 
+  std::vector<float> scale_up;
+  std::vector<float> scale_dn;
+  std::vector<float> resol_up;
+  std::vector<float> resol_dn;
+
   out->reserve(in->size());   
+
   stat_up.reserve(in->size());   
   stat_dn.reserve(in->size());   
   syst_up.reserve(in->size());   
@@ -117,14 +134,20 @@ CalibratedElectronProducerRun2T<T>::produce( edm::Event & iEvent, const edm::Eve
   phi_up.reserve(in->size());   
   phi_dn.reserve(in->size());   
 
+  scale_up.reserve(in->size());
+  scale_dn.reserve(in->size());
+  resol_up.reserve(in->size());
+  resol_dn.reserve(in->size());
+  
   int eventIsMC = -1;
   if (autoDataType)
     eventIsMC = iEvent.isRealData() ? 0 : 1;
   
-  for (const T &ele : *in) {
+  for (auto &ele : *in) {
     out->push_back(ele);
     const EcalRecHitCollection* recHits = (ele.isEB()) ? recHitCollectionEBHandle.product() : recHitCollectionEEHandle.product();
     std::vector<float> uncertainties = theEnCorrectorRun2.calibrate(out->back(), iEvent.id().run(), recHits, iEvent.streamID(), eventIsMC);
+
     stat_up.push_back(uncertainties[0]);
     stat_dn.push_back(uncertainties[1]);
     syst_up.push_back(uncertainties[2]);
@@ -135,9 +158,13 @@ CalibratedElectronProducerRun2T<T>::produce( edm::Event & iEvent, const edm::Eve
     rho_dn.push_back (uncertainties[7]);
     phi_up.push_back (uncertainties[8]);
     phi_dn.push_back (uncertainties[9]);
+
+    scale_up.push_back(uncertainties[10]);
+    scale_dn.push_back(uncertainties[11]);
+    resol_up.push_back(uncertainties[12]);
+    resol_dn.push_back(uncertainties[13]);
   }
   
-  auto calibratedHandle(iEvent.put(std::move(out)));
   std::unique_ptr<floatMap> statUpMap = std::make_unique<floatMap>();
   std::unique_ptr<floatMap> statDownMap = std::make_unique<floatMap>();
   std::unique_ptr<floatMap> systUpMap = std::make_unique<floatMap>();
@@ -148,6 +175,12 @@ CalibratedElectronProducerRun2T<T>::produce( edm::Event & iEvent, const edm::Eve
   std::unique_ptr<floatMap> rhoDownMap = std::make_unique<floatMap>();
   std::unique_ptr<floatMap> phiUpMap = std::make_unique<floatMap>();
   std::unique_ptr<floatMap> phiDownMap = std::make_unique<floatMap>();
+  std::unique_ptr<floatMap> scaleUpMap = std::make_unique<floatMap>();
+  std::unique_ptr<floatMap> scaleDownMap = std::make_unique<floatMap>();
+  std::unique_ptr<floatMap> resolUpMap = std::make_unique<floatMap>();
+  std::unique_ptr<floatMap> resolDownMap = std::make_unique<floatMap>();
+
+  edm::OrphanHandle<objectVector> calibratedHandle = iEvent.put(std::move(out));
 
   floatMap::Filler statUpMapFiller(*statUpMap);
   statUpMapFiller.insert(calibratedHandle, stat_up.begin(), stat_up.end());
@@ -198,6 +231,26 @@ CalibratedElectronProducerRun2T<T>::produce( edm::Event & iEvent, const edm::Eve
   phiDownMapFiller.insert(calibratedHandle, phi_dn.begin(), phi_dn.end());
   phiDownMapFiller.fill();
   iEvent.put(std::move(phiDownMap), "EGMresolutionPhiDownUncertainty");
+
+  floatMap::Filler scaleUpMapFiller(*scaleUpMap);
+  scaleUpMapFiller.insert(calibratedHandle, scale_up.begin(), scale_up.end());
+  scaleUpMapFiller.fill();
+  iEvent.put(std::move(scaleUpMap), "EGMscaleUpUncertainty");
+
+  floatMap::Filler scaleDownMapFiller(*scaleDownMap);
+  scaleDownMapFiller.insert(calibratedHandle, scale_dn.begin(), scale_dn.end());
+  scaleDownMapFiller.fill();
+  iEvent.put(std::move(scaleDownMap), "EGMscaleDownUncertainty");
+
+  floatMap::Filler resolUpMapFiller(*resolUpMap);
+  resolUpMapFiller.insert(calibratedHandle, resol_up.begin(), resol_up.end());
+  resolUpMapFiller.fill();
+  iEvent.put(std::move(resolUpMap), "EGMresolutionUpUncertainty");
+
+  floatMap::Filler resolDownMapFiller(*resolDownMap);
+  resolDownMapFiller.insert(calibratedHandle, resol_dn.begin(), resol_dn.end());
+  resolDownMapFiller.fill();
+  iEvent.put(std::move(resolDownMap), "EGMresolutionDownUncertainty");
 
 
 }
