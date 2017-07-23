@@ -44,7 +44,7 @@ namespace flashgg {
 
 
         void writeInfoFromLastSelectionTo( flashgg::DiPhotonCandidate & ) override;
-        // void writeInfoFromLastSelectionTo( flashgg::PhotonJetCandidate & ) override;
+        void writeInfoFromLastSelectionTo( flashgg::PhotonJetCandidate & ) override;
 
         double vtxZFromConvOnly( const edm::Ptr<pat::Photon> &, const edm::Ptr<reco::Conversion> &, const math::XYZPoint & ) const;
         double vtxZFromConvSuperCluster( const edm::Ptr<pat::Photon> &, const edm::Ptr<reco::Conversion> &, const math::XYZPoint & ) const;
@@ -1034,33 +1034,33 @@ namespace flashgg {
     }
 
 
-    // void LegacyVertexSelector::writeInfoFromLastSelectionTo( flashgg::PhotonJetCandidate &phojet )
-    // {
+    void LegacyVertexSelector::writeInfoFromLastSelectionTo( flashgg::PhotonJetCandidate &phojet )
+    {
 
-    //     phojet.setLogSumPt2( logsumpt2selected_ );
-    //     phojet.setPtBal( ptbalselected_ );
-    //     phojet.setPtAsym( ptasymselected_ );
+        phojet.setLogSumPt2( logsumpt2selected_ );
+        phojet.setPtBal( ptbalselected_ );
+        phojet.setPtAsym( ptasymselected_ );
 
-    //     phojet.setNConv( nConv_ );
-    //     phojet.setPullConv( pull_conv_ );
-    //     phojet.setNVert( nVert_ );
-    //     phojet.setMVA0( MVA0_ );
-    //     phojet.setMVA1( MVA1_ );
-    //     phojet.setMVA2( MVA2_ );
-    //     phojet.setDZ1( dZ1_ );
-    //     phojet.setDZ2( dZ2_ );
+        phojet.setNConv( nConv_ );
+        phojet.setPullConv( pull_conv_ );
+        phojet.setNVert( nVert_ );
+        phojet.setMVA0( MVA0_ );
+        phojet.setMVA1( MVA1_ );
+        phojet.setMVA2( MVA2_ );
+        phojet.setDZ1( dZ1_ );
+        phojet.setDZ2( dZ2_ );
 
-    //     phojet.setVNConv( vnConv_ );
-    //     phojet.setVPullConv( vpull_conv_ );
-    //     phojet.setVPtBal( vptbal_ );
-    //     phojet.setVPtAsym( vptasym_ );
-    //     phojet.setVLogSumPt2( vlogsumpt2_ );
-    //     phojet.setVMVA( vmva_value_ );
-    //     phojet.setVVtxPtr( vVtxPtr_ );
-    //     phojet.setVMVASortedIndex( vmva_sortedindex_ );
+        phojet.setVNConv( vnConv_ );
+        phojet.setVPullConv( vpull_conv_ );
+        phojet.setVPtBal( vptbal_ );
+        phojet.setVPtAsym( vptasym_ );
+        phojet.setVLogSumPt2( vlogsumpt2_ );
+        phojet.setVMVA( vmva_value_ );
+        phojet.setVVtxPtr( vVtxPtr_ );
+        phojet.setVMVASortedIndex( vmva_sortedindex_ );
 
-    //     phojet.setVtxProbMVA( vtxprobmva_ );
-    // }
+        phojet.setVtxProbMVA( vtxprobmva_ );
+    }
 
 } // namespace flashgg
 
